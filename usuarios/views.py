@@ -4,11 +4,14 @@ from . models import Usuario
 from django.shortcuts import redirect 
 from hashlib import sha256
 
-def login(requst):
-    return HttpResponse('Login')
+def login(request):
+    status = request.GET.get('status')
+    return render(request, 'login.html', {'status': status}) 
+    
 
 def cadastro(request):
-    return render(request, 'cadastro.html')
+    status = request.GET.get('status')
+    return render(request, 'cadastro.html', {'status': status})
 
 def valida_cadastro(request):
     nome = request.POST.get('nome')
@@ -24,7 +27,7 @@ def valida_cadastro(request):
         return redirect('/auth/cadastro/?status=2') 
 
     if len(usuario) > 0:
-        return redirect('/auth/cadastro/status=3')
+        return redirect('/auth/cadastro/?status=3')
     try:
         password = sha256(password.encode()).hexdigest()
         usuario = Usuario(nome = nome, 
@@ -37,4 +40,26 @@ def valida_cadastro(request):
         return redirect('/auth/cadastro/?status=4')
 
     # return HttpResponse(f'{nome=} {email=} {password=}')
+
+def valida_login(request):
+    email = request.POST.get('email')
+    password = request.POST.get('password')
+
+    password = sha256(password.encode()).hexdigest()
+
+    usuario = Usuario.objects.filter(email = email).filter(password = password)
+
+    if len(usuario) == 0:
+        return redirect('/auth/login/?status=1')
+    elif len(usuario) > 0:
+        request.session['usuario'] = usuario[0].id
+        return redirect(f'/book/home/?id_usuario={request.session["usuario"]}')
+     
+     #return HttpResponse(f'{email= }, {password= }')
+def sair(request):
+    request.session.flush()
+    return redirect('/auth/login/')
+
+   
+
 

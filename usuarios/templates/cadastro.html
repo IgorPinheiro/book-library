@@ -5,6 +5,36 @@
 {% block 'conteudo' %} 
 
 <div class="container"> 
+    {% if status == '1' %}
+        <div class="alert alert-danger" role="alert">
+            Ops!, Usuário ou E-mail em branco.
+        </div>
+    {% endif %}
+
+    {% if status == '2' %}
+        <div class="alert alert-danger" role="alert">
+            A seha deve ter no mínino 8 caracteres.
+        </div>
+    {% endif %}
+
+    {% if status == '3' %}
+        <div class="alert alert-danger" role="alert">
+            Usuário já cadastrado.
+        </div>
+    {% endif %}
+
+    {% if status == '0' %}
+        <div class="alert alert-success" role="alert">
+            Usuário criado com Sucesso.
+        </div>
+    {% endif %}
+
+    {% if status == '4' %}
+        <div class="alert alert-danger" role="alert">
+            Ops!, tivemos algum problema, por gentilezar tentar novamente mais tarde.
+        </div>
+    {% endif %}
+
     <div class="row">
         
         <div class="col-md-3">
@@ -24,7 +54,8 @@
                 <label>Senha</label>
                 <input name="password" class="form-control" type="password" placeholder="Senha...">
                 <br>
-                <input class="btn btn-info btn-lg" type="submit" value="Enviar">
+                <input class="btn btn-outline-primary btn-lg" type="submit" value="Cadastrar">
+                <a href="{% url 'login' %}" class="btn btn-outline-success btn-lg">Login</a>
             </form>
 
         </div>
